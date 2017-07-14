@@ -1,6 +1,7 @@
-void ledUpdate( void ) {
+void ledUpdate( double leftValue, double rightValue ) {
 
-  int tailLength = 8;
+  double tailMax = 8;
+  double tailLength = 0;
   int midPixel = (int)targetPixel;
 
   fill_solid( leds, NUM_LEDS, CRGB::Black);
@@ -9,27 +10,31 @@ void ledUpdate( void ) {
   leds[midPixel] = CHSV(HUE_BLUE, 255, 255);
   leds[midPixel+1] = CHSV(HUE_BLUE, 255, 100);
 
-  if( greenPressed ) {
-    tail( 1, midPixel );
+  if( leftValue > 0.05 ) {
+    tailLength = (tailMax * leftValue); 
+    tail( -1, midPixel, tailLength  );
+  } 
+  if( rightValue > 0.05 ) {
+    tailLength = (tailMax * rightValue); 
+    tail( 1, midPixel, tailLength );
   }
-  if( bluePressed ) {
-    tail( -1, midPixel );
-  }
+
+  leds[goalPixel] = CHSV(HUE_GREEN, 255, 100);
   
   FastLED.show();
 }
 
-void tail( int multiplier, int center ) {
+void tail( int multiplier, int center, double tailLength ) {
 
-    int midPixel = center;
-    
-    leds[midPixel+(2*multiplier)] = CHSV(HUE_ORANGE, 255, 100);
-    if( frameCount % 5 == 0 ) {
-      leds[midPixel+(3*multiplier)] = CHSV(HUE_ORANGE, 255, 100);
-    }
-    if( frameCount % 3 == 0 ) {
-      leds[midPixel+(4*multiplier)] = CHSV(HUE_RED, 255, 50);
-    }
- }
+  int thisLength = (int)tailLength;
 
-
+  // steady orange for adjacent pixel
+  leds[center+(2*multiplier)] = CHSV(HUE_ORANGE, 255, 255);
+  
+  //increasing frequency and decreasing brightness for tail 
+  for( int i=0; i<thisLength; i++ ) {
+//    if( frameCount % (5-i) == 0 ) {
+      leds[center+(multiplier*(i+3))] = CHSV(HUE_ORANGE, 255, 255-(40*i));
+//    }
+  }
+}

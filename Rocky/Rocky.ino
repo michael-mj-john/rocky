@@ -10,14 +10,14 @@ long lastDrawMillis;
 float acceleration;
 int frameCount;
 
-bool greenPressed;
-bool bluePressed;
-
-enum gameStates { start, play };
+enum gameStates { start, play, win };
 gameStates gameState = start;
 
 double velocity;
-double gravity = 1;
+static double gravity = 1;
+static double thrustMax = 4;
+uint16_t framesAtTarget;
+int goalPixel;
 
 void setup() {
   Serial.begin(9600);
@@ -33,28 +33,36 @@ void loop() {
   if( gameState == start ) {
     gameStart();
   }
-
-  if( digitalRead(3) == LOW ) { bluePressed = 1;  } else { bluePressed = 0; }
-  if( digitalRead(4) == LOW ) { greenPressed = 1; } else { greenPressed = 0; }
-
- // printDouble( velocity, 100 );
+  if( gameState == win ) {
+    pointScored();
+  }
   
   if( millis() > lastDrawMillis + 1000/30 ) { // 30 fps LED update
     frameCount < 30 ? frameCount++ : frameCount = 0;
     gameUpdate();
-    ledUpdate();
     lastDrawMillis = millis();
   }
 }
 
 void gameStart( void ) {
-  targetPixel = NUM_LEDS/2;
+  targetPixel = NUM_LEDS/2 - 5;
   Serial.println("game reset");
   velocity = 0;
+  goalPixel = random(6,NUM_LEDS-6);
   gameState = play;
   do {
     acceleration = 3;
     //acceleration = random(-3,3);
   } while ( acceleration == 0 );
+}
+
+void pointScored( void ) {
+  for( int i =0; i<NUM_LEDS; i++ ) {
+    leds[i] = CHSV(HUE_GREEN, 255, 100);
+  }
+  FastLED.show();
+  delay(1000);
+  gameState = start;
+  
 }
 
