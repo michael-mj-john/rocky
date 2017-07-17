@@ -2,20 +2,10 @@ void gameUpdate( void ) {
 
   float acceleration; 
 
-  //accommodate "pendulum center"
-/*  if( targetPixel < NUM_LEDS/2 ) {
-    acceleration = gravity * -1;
-  }
-  else {
-    acceleration = gravity;
-  }
-
-  velocity = velocity + (acceleration * 0.033); // assumes 30fps framerate
-*/
-  double leftValue = analogRead(A4);
+  double leftValue = analogRead(A1);
   leftValue = leftValue / 1024;
   velocity = velocity + ((thrustMax * leftValue) * .033);
-  double rightValue = analogRead(A3);
+  double rightValue = analogRead(A0);
   rightValue = rightValue / 1024;
   velocity = velocity - ((thrustMax * rightValue) * .033);
 
@@ -27,7 +17,7 @@ void gameUpdate( void ) {
    gameState = start;
   }
 
-  if( (int)targetPixel == goalPixel ) {
+  if( (int)targetPixel > goalPixel-1 && (int)targetPixel < goalPixel+1 ) {
     framesAtTarget++;
     if( framesAtTarget > 10 ) {
       gameState = win;

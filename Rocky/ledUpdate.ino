@@ -1,31 +1,34 @@
-void ledUpdate( double leftValue, double rightValue ) {
+void ledUpdate( double leftInput, double rightInput ) {
 
   double tailMax = 8;
-  double tailLength = 0;
   int midPixel = (int)targetPixel;
 
+  //begin by blanking all LEDs
   fill_solid( leds, NUM_LEDS, CRGB::Black);
 
+  //draw the "spaceship"
   leds[midPixel-1] = CHSV(HUE_BLUE, 255, 100);
   leds[midPixel] = CHSV(HUE_BLUE, 255, 255);
   leds[midPixel+1] = CHSV(HUE_BLUE, 255, 100);
 
-  if( leftValue > 0.05 ) {
-    tailLength = (tailMax * leftValue); 
-    tail( -1, midPixel, tailLength  );
+  //if input is above threshold, draw scaled-length tail
+  if( leftInput > 0.05 ) {
+    tail( -1, midPixel, leftInput );
   } 
-  if( rightValue > 0.05 ) {
-    tailLength = (tailMax * rightValue); 
-    tail( 1, midPixel, tailLength );
+  if( rightInput > 0.05 ) {
+    tail( 1, midPixel, rightInput );
   }
 
-  leds[goalPixel] = CHSV(HUE_GREEN, 255, 100);
+  //draw the "mouse" pixel
+  leds[goalPixel] = CRGB(80, 80, 80);
   
   FastLED.show();
 }
 
-void tail( int multiplier, int center, double tailLength ) {
+void tail( int multiplier, int center, double inputScale ) {  //renders thrust tail
 
+  static double tailMax = 8;
+  double tailLength = tailMax * inputScale;
   int thisLength = (int)tailLength;
 
   // steady orange for adjacent pixel
@@ -33,8 +36,6 @@ void tail( int multiplier, int center, double tailLength ) {
   
   //increasing frequency and decreasing brightness for tail 
   for( int i=0; i<thisLength; i++ ) {
-//    if( frameCount % (5-i) == 0 ) {
       leds[center+(multiplier*(i+3))] = CHSV(HUE_ORANGE, 255, 255-(40*i));
-//    }
   }
 }

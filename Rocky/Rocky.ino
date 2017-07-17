@@ -1,6 +1,6 @@
 #include "FastLED.h"
 
-#define NUM_LEDS 120
+#define NUM_LEDS 144
 #define DATA_PIN 7
 
 CRGB leds[NUM_LEDS];
@@ -16,6 +16,7 @@ gameStates gameState = start;
 double velocity;
 static double gravity = 1;
 static double thrustMax = 4;
+
 uint16_t framesAtTarget;
 int goalPixel;
 
@@ -24,7 +25,7 @@ void setup() {
   pinMode(3,INPUT); // left button 
   pinMode(4, INPUT); // right button
   FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
-  randomSeed(analogRead(A0));
+  randomSeed(analogRead(A5));
   frameCount = 0;
 }
 
