@@ -27,9 +27,6 @@ int goalPixel;
 Player leftPlayer(NUM_LEDS/2 - 1);
 Player rightPlayer(NUM_LEDS/2 + 1);
 
-int leftSensorRead;
-int rightSensorRead;
-
 void setup() {
   Serial.begin(9600);
   pinMode(3,INPUT); // left button 
@@ -79,8 +76,8 @@ void preGame( void ) {
   int maxRead = 350;
   
   // read sensor input
-  leftSensorRead = analogRead(LEFT_PLAYER_PIN);
-  rightSensorRead = analogRead(RIGHT_PLAYER_PIN);
+  int leftSensorRead = analogRead(LEFT_PLAYER_PIN);
+  int rightSensorRead = analogRead(RIGHT_PLAYER_PIN);
 
   // If either the left or right player has not had their minFlex configured
   if (leftPlayer.minFlex < 0 || rightPlayer.minFlex < 0) {
@@ -133,6 +130,7 @@ void preGame( void ) {
 }
 
 void gameStart(void) {
+  points = 0;
   targetPixel = NUM_LEDS/2;
   Serial.println("game reset");
   velocity = 0;
