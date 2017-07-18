@@ -39,7 +39,6 @@ void setup() {
 }
 
 void loop() {
-
   // if reset button is pressed
   if (digitalRead(2) == HIGH) {
     gameState = start;
@@ -75,41 +74,69 @@ void loop() {
 
 
 void preGame( void ) {
-          
-     // read sensor input
-      leftSensorRead = analogRead(LEFT_PLAYER_PIN);
-      rightSensorRead = analogRead(RIGHT_PLAYER_PIN);
+  // read sensor input
+  leftSensorRead = analogRead(LEFT_PLAYER_PIN);
+  rightSensorRead = analogRead(RIGHT_PLAYER_PIN);
 
-    Serial.println(leftPlayer.dotPosition);
-    Serial.println(rightPlayer.dotPosition);
+  // Serial.println(leftPlayer.dotPosition);
+  // Serial.println(rightPlayer.dotPosition);
 
-      if( leftSensorRead < 100 ) {
-        leds[leftPlayer.dotPosition] = CRGB(0,0,0);
-        leftPlayer.dotPosition--;
-        leds[leftPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
-        if( leftPlayer.dotPosition == 0 ) {
-          leftPlayer.minFlex = leftSensorRead;
-        }
-      }
-      if( rightSensorRead < 100 ) {
-       leds[rightPlayer.dotPosition] = CRGB(0,0,0);
-       rightPlayer.dotPosition++;
-       leds[rightPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
-         if( rightPlayer.dotPosition == 0 ) {
-          rightPlayer.minFlex = rightSensorRead;
-        }
-      }
-
-     FastLED.show();
+  // If either the left or right player has not had their minFlex configured
+  if (leftPlayer.minFlex < 0 || rightPlayer.minFlex < 0) {
+    if (leftSensorRead < 100) {
+      leds[leftPlayer.dotPosition] = CRGB(0,0,0);
+      leftPlayer.dotPosition--;
+      leds[leftPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
       
-      // When someone presses the start button, it's time to go
+      if (leftPlayer.dotPosition == 0) {
         leftPlayer.minFlex = leftSensorRead;
-        rightPlayer.minFlex = rightSensorRead;
-
-       if( leftPlayer.dotPosition == targetPixel - 1 && rightPlayer.dotPosition == targetPixel + 1 ) {
- //       calibrateMode = 0;
-       }
+      }
+    }
+    
+    if (rightSensorRead < 100) {
+      leds[rightPlayer.dotPosition] = CRGB(0,0,0);
+      rightPlayer.dotPosition++;
+      leds[rightPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
       
+      if (rightPlayer.dotPosition == NUM_LEDS) {
+        rightPlayer.minFlex = rightSensorRead;
+      }
+    }
+  } else { // else we should configure maxFlex
+    if (leftSensorRead > 350) {
+      leds[leftPlayer.dotPosition] = CRGB(0,0,0);
+      leftPlayer.dotPosition++;
+      leds[leftPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
+      
+      if (leftPlayer.dotPosition == NUM_LEDS / 2) {
+        leftPlayer.maxFlex = leftSensorRead;
+      }
+    }
+    
+    if (rightSensorRead > 350) {
+      leds[rightPlayer.dotPosition] = CRGB(0,0,0);
+      rightPlayer.dotPosition--;
+      leds[rightPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
+      
+      if (rightPlayer.dotPosition == NUM_LEDS / 2) {
+        rightPlayer.maxFlex = rightSensorRead;
+      }
+    }
+  }
+
+  FastLED.show();
+      
+  /*// When someone presses the start button, it's time to go
+  leftPlayer.minFlex = leftSensorRead;
+  rightPlayer.minFlex = rightSensorRead;
+
+  if( leftPlayer.dotPosition == targetPixel - 1 && rightPlayer.dotPosition == targetPixel + 1 ) {
+    // calibrateMode = 0;
+  } */
+  if (leftPlayer.isInitialized() && rightPlayer.isInitialized()) {
+    calibrateMode = 0;
+    //Serial.println("BUTTS");
+  }
 }
 
 void gameStart(void) {
@@ -119,6 +146,8 @@ void gameStart(void) {
   goalPixel = random(6,NUM_LEDS-6);
   gameState = play;
   calibrateMode = 1;
+  leftPlayer.reset(NUM_LEDS/2 - 1);
+  rightPlayer.reset(NUM_LEDS/2 + 1);
   ledUpdate(0,0);
 }
 

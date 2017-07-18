@@ -13,6 +13,9 @@ class Player {
     
     // constructor
     Player( int dotPos ) : dotPosition( dotPos ) { }
+
+    // Unset min and max Flex while simultaneously setting a new position
+    void reset(int newPos);
   
     // Has this player had their min / max flex values configured?
     bool isInitialized();
