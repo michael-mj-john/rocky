@@ -9,7 +9,7 @@
 
 CRGB leds[NUM_LEDS];
 
-double targetPixel;
+float targetPixel;
 long lastDrawMillis;
 int frameCount;
 int points=0;
@@ -18,8 +18,8 @@ enum gameStates { prep, start, play, win };
 gameStates gameState = start;
 bool calibrateMode = 1;
 
-double velocity;
-static double thrustMax = 4;
+float velocity;
+static float thrustMax = 4;
 
 uint16_t framesAtTarget;
 int goalPixel;
@@ -75,8 +75,8 @@ void loop() {
 
 
 void preGame( void ) {
-  int minRead = 200;
-  int maxRead = 350;
+  static int minRead = 200;
+  static int maxRead = 350;
   
   // read sensor input
   leftSensorRead = analogRead(LEFT_PLAYER_PIN);
@@ -150,14 +150,18 @@ void preGame( void ) {
 
 void gameStart(void) {
   targetPixel = NUM_LEDS/2;
-  Serial.println("game reset");
   velocity = 0;
   goalPixel = random(6,NUM_LEDS-6);
   gameState = play;
   calibrateMode = 1;
   leftPlayer.reset(NUM_LEDS/2 - 1);
   rightPlayer.reset(NUM_LEDS/2 + 1);
-  ledUpdate();
+  
+  // Draw the center point
+  leds[(int)targetPixel] = CHSV(HUE_BLUE, 255, 255);
+  FastLED.show();
+
+  Serial.println("game reset");
 }
 
 void pointScored( void ) {
