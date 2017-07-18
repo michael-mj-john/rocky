@@ -10,11 +10,12 @@ void gameUpdate( void ) {
   targetPixel = targetPixel + ( velocity / 30 );
 
   // test for going off either end, and reset if so
-  if( (int)targetPixel >= NUM_LEDS-2 || targetPixel < 0 ) { 
+  if( (int)targetPixel >= NUM_LEDS-2 || targetPixel <= 0 ) { 
    velocity = 0;
-   gameState = prep;
+   gameState = start;
   }
 
+  // test for successful 'catch'
   if( (int)targetPixel > goalPixel-1 && (int)targetPixel < goalPixel+1 ) {
     framesAtTarget++;
     if( framesAtTarget > TARGET_FRAMES ) {

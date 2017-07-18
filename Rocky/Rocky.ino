@@ -11,14 +11,12 @@ CRGB leds[NUM_LEDS];
 
 double targetPixel;
 long lastDrawMillis;
-float acceleration;
 int frameCount;
 
 enum gameStates { prep, start, play, win };
 gameStates gameState = start;
 
 double velocity;
-static double gravity = 1;
 static double thrustMax = 4;
 
 uint16_t framesAtTarget;
@@ -40,20 +38,10 @@ void setup() {
 }
 
 void loop() {
-  Serial.println(digitalRead(2) == HIGH);
+//  Serial.println(digitalRead(2)==HIGH); // debug to test button functionality
   switch (gameState) {
-    case prep:
-      // read sensor input
-      leftSensorRead = analogRead(LEFT_PLAYER_PIN);
-      rightSensorRead = analogRead(RIGHT_PLAYER_PIN);
-
-      // When someone presses the start button, it's time to go
-      if (digitalRead(2) == HIGH) {
-        leftPlayer.minFlex = leftSensorRead;
-        rightPlayer.minFlex = rightSensorRead;
-  
-        gameState = play;
-      }
+    case prep:  
+      preGame();    
       break;
       
     case start:
@@ -77,12 +65,28 @@ void loop() {
   }
 }
 
+
+void preGame( void ) {
+     // read sensor input
+      leftSensorRead = analogRead(LEFT_PLAYER_PIN);
+      rightSensorRead = analogRead(RIGHT_PLAYER_PIN);
+
+      // When someone presses the start button, it's time to go
+      if (digitalRead(2) == HIGH) {
+        leftPlayer.minFlex = leftSensorRead;
+        rightPlayer.minFlex = rightSensorRead;
+  
+        gameState = play;
+      }
+}
+
 void gameStart(void) {
   targetPixel = NUM_LEDS/2 - 5;
   Serial.println("game reset");
   velocity = 0;
   goalPixel = random(6,NUM_LEDS-6);
   gameState = prep;
+  ledUpdate(0,0);
 }
 
 void pointScored( void ) {

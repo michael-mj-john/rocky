@@ -16,6 +16,7 @@ public:
   // Given a raw sensor reading (sensorValue), what is the actual "force" that this player is generating?
   // Normalized to [0 .. 1]
   float getNormalizedForce(int sensorValue);
+
 };
 
 #endif
