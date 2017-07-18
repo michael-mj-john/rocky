@@ -74,16 +74,24 @@ void loop() {
 
 
 void preGame( void ) {
+  int minRead = 200;
+  int maxRead = 350;
+  
   // read sensor input
   leftSensorRead = analogRead(LEFT_PLAYER_PIN);
   rightSensorRead = analogRead(RIGHT_PLAYER_PIN);
+
+  Serial.print("left: ");
+  Serial.println(leftSensorRead);
+  Serial.print("right: ");
+  Serial.println(rightSensorRead);
 
   // Serial.println(leftPlayer.dotPosition);
   // Serial.println(rightPlayer.dotPosition);
 
   // If either the left or right player has not had their minFlex configured
   if (leftPlayer.minFlex < 0 || rightPlayer.minFlex < 0) {
-    if (leftSensorRead < 100) {
+    if (/*leftSensorRead < minRead && */leftPlayer.minFlex < 0) {
       leds[leftPlayer.dotPosition] = CRGB(0,0,0);
       leftPlayer.dotPosition--;
       leds[leftPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
@@ -93,17 +101,17 @@ void preGame( void ) {
       }
     }
     
-    if (rightSensorRead < 100) {
+    if (/*rightSensorRead < minRead && */rightPlayer.minFlex < 0) {
       leds[rightPlayer.dotPosition] = CRGB(0,0,0);
       rightPlayer.dotPosition++;
       leds[rightPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
       
-      if (rightPlayer.dotPosition == NUM_LEDS) {
+      if (rightPlayer.dotPosition == NUM_LEDS - 1) {
         rightPlayer.minFlex = rightSensorRead;
       }
     }
   } else { // else we should configure maxFlex
-    if (leftSensorRead > 350) {
+    if (leftSensorRead > maxRead && leftPlayer.maxFlex < 0) {
       leds[leftPlayer.dotPosition] = CRGB(0,0,0);
       leftPlayer.dotPosition++;
       leds[leftPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
@@ -113,7 +121,7 @@ void preGame( void ) {
       }
     }
     
-    if (rightSensorRead > 350) {
+    if (rightSensorRead > maxRead && rightPlayer.maxFlex < 0) {
       leds[rightPlayer.dotPosition] = CRGB(0,0,0);
       rightPlayer.dotPosition--;
       leds[rightPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
@@ -148,7 +156,7 @@ void gameStart(void) {
   calibrateMode = 1;
   leftPlayer.reset(NUM_LEDS/2 - 1);
   rightPlayer.reset(NUM_LEDS/2 + 1);
-  ledUpdate(0,0);
+  ledUpdate();
 }
 
 void pointScored( void ) {

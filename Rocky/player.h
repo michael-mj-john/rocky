@@ -9,6 +9,7 @@ class Player {
     // The values of this players minimum and maximum flexes
     int minFlex = -1;
     int maxFlex = -1; //put back to -1 when maxvalue is established dynamically
+    int normalizedForce = 0;
     int dotPosition;
     
     // constructor
@@ -22,7 +23,7 @@ class Player {
   
     // Given a raw sensor reading (sensorValue), what is the actual "force" that this player is generating?
     // Normalized to [0 .. 1]
-    float getNormalizedForce(int sensorValue);
+    void setNormalizedForce(int sensorValue);
 
 };
 

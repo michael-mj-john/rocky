@@ -1,11 +1,11 @@
 void gameUpdate( void ) {
   double leftValue = analogRead(LEFT_PLAYER_PIN);
-  leftValue = leftPlayer.getNormalizedForce(leftValue);
-  velocity = velocity + ((thrustMax * leftValue) * .033);
+  leftPlayer.setNormalizedForce(leftValue);
+  velocity = velocity + ((thrustMax * leftPlayer.normalizedForce) * .033);
   
   double rightValue = analogRead(RIGHT_PLAYER_PIN);
-  rightValue = rightPlayer.getNormalizedForce(rightValue);
-  velocity = velocity - ((thrustMax * rightValue) * .033);
+  rightPlayer.setNormalizedForce(rightValue);
+  velocity = velocity - ((thrustMax * rightPlayer.normalizedForce) * .033);
 
   targetPixel = targetPixel + ( velocity / 30 );
 
@@ -16,7 +16,7 @@ void gameUpdate( void ) {
   }
 
   // test for successful 'catch'
-  if( (int)targetPixel > goalPixel-1 && (int)targetPixel < goalPixel+1 ) {
+  if( (int)targetPixel >= goalPixel-1 && (int)targetPixel <= goalPixel+1 ) {
     framesAtTarget++;
     if( framesAtTarget > TARGET_FRAMES ) {
       gameState = win;
@@ -27,6 +27,6 @@ void gameUpdate( void ) {
     framesAtTarget = 0;
   }
 
-  ledUpdate( leftValue, rightValue );
+  ledUpdate();
 }
 

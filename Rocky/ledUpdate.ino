@@ -1,4 +1,4 @@
-void ledUpdate( double leftInput, double rightInput ) {
+void ledUpdate() {
 
   double tailMax = 8;
   int midPixel = (int)targetPixel;
@@ -12,11 +12,11 @@ void ledUpdate( double leftInput, double rightInput ) {
   leds[midPixel+1] = CHSV(HUE_BLUE, 255, 100);
 
   //if input is above threshold, draw scaled-length tail
-  if( leftInput > 0.05 ) {
-    tail( -1, midPixel, leftInput );
+  if( leftPlayer.normalizedForce > 0.05 ) {
+    tail( -1, midPixel, leftPlayer.normalizedForce );
   } 
-  if( rightInput > 0.05 ) {
-    tail( 1, midPixel, rightInput );
+  if( rightPlayer.normalizedForce > 0.05 ) {
+    tail( 1, midPixel, rightPlayer.normalizedForce );
   }
 
   //draw the "mouse" pixel
@@ -25,8 +25,7 @@ void ledUpdate( double leftInput, double rightInput ) {
   FastLED.show();
 }
 
-void tail( int multiplier, int center, double inputScale ) {  //renders thrust tail
-
+void tail (int multiplier, int center, float inputScale) {  //renders thrust tail
   static double tailMax = 8;
   double tailLength = tailMax * inputScale;
   int thisLength = (int)tailLength;
