@@ -18,7 +18,7 @@ void gameUpdate( void ) {
   // test for successful 'catch'
   if( (int)targetPixel >= goalPixel-1 && (int)targetPixel <= goalPixel+1 ) {
     framesAtTarget++;
-    if( framesAtTarget > TARGET_FRAMES ) {
+    if( framesAtTarget > TARGET_FRAMES + (points * 2) ) {
       gameState = win;
       framesAtTarget = 0;
     } 
