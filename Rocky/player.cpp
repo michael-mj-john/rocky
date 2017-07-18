@@ -2,6 +2,8 @@
 
 /* private */
 /* public */
+
+
 // Has this player had their min / max flex values configured?
 bool Player::isInitialized() {
   return minFlex >= 0 && maxFlex >= 0;
