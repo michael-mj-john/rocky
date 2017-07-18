@@ -26,15 +26,16 @@ void ledUpdate() {
 }
 
 void tail (int multiplier, int center, float inputScale) {  //renders thrust tail
-  static double tailMax = 8;
+  static double tailMax = 12;
   double tailLength = tailMax * inputScale;
   int thisLength = (int)tailLength;
+  int decrement = 255 / thisLength;
 
   // steady orange for adjacent pixel
   leds[center+(2*multiplier)] = CHSV(HUE_ORANGE, 255, 255);
   
   //increasing frequency and decreasing brightness for tail 
   for( int i=0; i<thisLength; i++ ) {
-      leds[center+(multiplier*(i+3))] = CHSV(HUE_ORANGE, 255, 255-(40*i));
+      leds[center+(multiplier*(i+3))] = CHSV(HUE_ORANGE, 255, 255-(decrement*i));
   }
 }
