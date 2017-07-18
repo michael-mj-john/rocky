@@ -1,6 +1,6 @@
 void ledUpdate() {
 
-  double tailMax = 8;
+  float tailMax = 8;
   int midPixel = (int)targetPixel;
 
   //begin by blanking all LEDs
@@ -26,8 +26,8 @@ void ledUpdate() {
 }
 
 void tail (int multiplier, int center, float inputScale) {  //renders thrust tail
-  static double tailMax = 12;
-  double tailLength = tailMax * inputScale;
+  static float tailMax = 12;
+  float tailLength = tailMax * inputScale;
   int thisLength = (int)tailLength;
   int decrement = 255 / thisLength;
 

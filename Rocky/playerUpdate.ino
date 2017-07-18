@@ -1,9 +1,9 @@
 void gameUpdate( void ) {
-  double leftValue = analogRead(LEFT_PLAYER_PIN);
+  float leftValue = analogRead(LEFT_PLAYER_PIN);
   leftPlayer.setNormalizedForce(leftValue);
   velocity = velocity + ((thrustMax * leftPlayer.normalizedForce) * .033);
   
-  double rightValue = analogRead(RIGHT_PLAYER_PIN);
+  float rightValue = analogRead(RIGHT_PLAYER_PIN);
   rightPlayer.setNormalizedForce(rightValue);
   velocity = velocity - ((thrustMax * rightPlayer.normalizedForce) * .033);
 
