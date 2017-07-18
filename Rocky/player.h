@@ -9,7 +9,7 @@ class Player {
     // The values of this players minimum and maximum flexes
     int minFlex = -1;
     int maxFlex = -1; //put back to -1 when maxvalue is established dynamically
-    int normalizedForce = 0;
+    float normalizedForce = 0;
     int dotPosition;
     
     // constructor

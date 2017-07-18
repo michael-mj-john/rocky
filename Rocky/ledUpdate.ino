@@ -36,6 +36,9 @@ void tail (int multiplier, int center, float inputScale) {  //renders thrust tai
   
   //increasing frequency and decreasing brightness for tail 
   for( int i=0; i<thisLength; i++ ) {
-      leds[center+(multiplier*(i+3))] = CHSV(HUE_ORANGE, 255, 255-(decrement*i));
+      int pixelIndex = center+(multiplier*(i+3));
+      pixelIndex = max(pixelIndex, 0);
+      pixelIndex = min(pixelIndex, NUM_LEDS-1);
+      leds[pixelIndex] = CHSV(HUE_ORANGE, 255, 255-(decrement*i));
   }
 }
