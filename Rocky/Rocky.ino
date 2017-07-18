@@ -12,6 +12,7 @@ CRGB leds[NUM_LEDS];
 double targetPixel;
 long lastDrawMillis;
 int frameCount;
+int points=0;
 
 enum gameStates { prep, start, play, win };
 gameStates gameState = start;
@@ -161,7 +162,8 @@ void gameStart(void) {
 
 void pointScored( void ) {
 
-  for( int j=0; j<3; j++ ) {
+  points++;
+  for( int j=0; j<points; j++ ) {
     for( int i =0; i<NUM_LEDS; i++ ) {
       leds[i] = CHSV(HUE_GREEN, 255, 100);
     }
