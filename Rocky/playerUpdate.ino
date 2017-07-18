@@ -1,12 +1,10 @@
 void gameUpdate( void ) {
-
-  float acceleration; 
-
-  double leftValue = analogRead(A1);
-  leftValue = leftValue / 1024;
+  double leftValue = analogRead(LEFT_PLAYER_PIN);
+  leftValue = leftPlayer.getNormalizedForce(leftValue);
   velocity = velocity + ((thrustMax * leftValue) * .033);
-  double rightValue = analogRead(A0);
-  rightValue = rightValue / 1024;
+  
+  double rightValue = analogRead(RIGHT_PLAYER_PIN);
+  rightValue = rightPlayer.getNormalizedForce(rightValue);
   velocity = velocity - ((thrustMax * rightValue) * .033);
 
   targetPixel = targetPixel + ( velocity / 30 );
@@ -14,12 +12,12 @@ void gameUpdate( void ) {
   // test for going off either end, and reset if so
   if( (int)targetPixel >= NUM_LEDS-2 || targetPixel < 0 ) { 
    velocity = 0;
-   gameState = start;
+   gameState = prep;
   }
 
   if( (int)targetPixel > goalPixel-1 && (int)targetPixel < goalPixel+1 ) {
     framesAtTarget++;
-    if( framesAtTarget > 10 ) {
+    if( framesAtTarget > TARGET_FRAMES ) {
       gameState = win;
       framesAtTarget = 0;
     } 
@@ -27,10 +25,7 @@ void gameUpdate( void ) {
   else {
     framesAtTarget = 0;
   }
-  
 
   ledUpdate( leftValue, rightValue );
-
-  
 }
 

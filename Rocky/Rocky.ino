@@ -1,7 +1,11 @@
 #include "FastLED.h"
+#include "player.h"
 
 #define NUM_LEDS 144
 #define DATA_PIN 7
+#define LEFT_PLAYER_PIN A0
+#define RIGHT_PLAYER_PIN A1
+#define TARGET_FRAMES 10
 
 CRGB leds[NUM_LEDS];
 
@@ -10,7 +14,7 @@ long lastDrawMillis;
 float acceleration;
 int frameCount;
 
-enum gameStates { start, play, win };
+enum gameStates { prep, start, play, win };
 gameStates gameState = start;
 
 double velocity;
@@ -19,6 +23,12 @@ static double thrustMax = 4;
 
 uint16_t framesAtTarget;
 int goalPixel;
+
+Player leftPlayer;
+Player rightPlayer;
+
+int leftSensorRead;
+int rightSensorRead;
 
 void setup() {
   Serial.begin(9600);
@@ -30,31 +40,49 @@ void setup() {
 }
 
 void loop() {
+  Serial.println(digitalRead(2) == HIGH);
+  switch (gameState) {
+    case prep:
+      // read sensor input
+      leftSensorRead = analogRead(LEFT_PLAYER_PIN);
+      rightSensorRead = analogRead(RIGHT_PLAYER_PIN);
 
-  if( gameState == start ) {
-    gameStart();
-  }
-  if( gameState == win ) {
-    pointScored();
-  }
+      // When someone presses the start button, it's time to go
+      if (digitalRead(2) == HIGH) {
+        leftPlayer.minFlex = leftSensorRead;
+        rightPlayer.minFlex = rightSensorRead;
   
-  if( millis() > lastDrawMillis + 1000/30 ) { // 30 fps LED update
-    frameCount < 30 ? frameCount++ : frameCount = 0;
-    gameUpdate();
-    lastDrawMillis = millis();
+        gameState = play;
+      }
+      break;
+      
+    case start:
+      gameStart();
+      break;
+      
+    case win:
+      pointScored();
+      break;
+      
+    case play:
+      if (millis() > lastDrawMillis + 1000/30) { // 30 fps LED update
+        frameCount < 30 ? frameCount++ : frameCount = 0;
+        gameUpdate();
+        lastDrawMillis = millis();
+      }
+      break;
+      
+    default:
+      break;
   }
 }
 
-void gameStart( void ) {
+void gameStart(void) {
   targetPixel = NUM_LEDS/2 - 5;
   Serial.println("game reset");
   velocity = 0;
   goalPixel = random(6,NUM_LEDS-6);
-  gameState = play;
-  do {
-    acceleration = 3;
-    //acceleration = random(-3,3);
-  } while ( acceleration == 0 );
+  gameState = prep;
 }
 
 void pointScored( void ) {
