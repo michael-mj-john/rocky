@@ -35,7 +35,7 @@ void setup() {
   pinMode(3,INPUT); // left button 
   pinMode(4, INPUT); // right button
   FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
-  randomSeed(analogRead(A5));
+  randomSeed(analogRead(A0));
   frameCount = 0;
 }
 
@@ -82,14 +82,6 @@ void preGame( void ) {
   leftSensorRead = analogRead(LEFT_PLAYER_PIN);
   rightSensorRead = analogRead(RIGHT_PLAYER_PIN);
 
-  Serial.print("left: ");
-  Serial.println(leftSensorRead);
-  Serial.print("right: ");
-  Serial.println(rightSensorRead);
-
-  // Serial.println(leftPlayer.dotPosition);
-  // Serial.println(rightPlayer.dotPosition);
-
   // If either the left or right player has not had their minFlex configured
   if (leftPlayer.minFlex < 0 || rightPlayer.minFlex < 0) {
     if (/*leftSensorRead < minRead && */leftPlayer.minFlex < 0) {
@@ -135,16 +127,8 @@ void preGame( void ) {
 
   FastLED.show();
       
-  /*// When someone presses the start button, it's time to go
-  leftPlayer.minFlex = leftSensorRead;
-  rightPlayer.minFlex = rightSensorRead;
-
-  if( leftPlayer.dotPosition == targetPixel - 1 && rightPlayer.dotPosition == targetPixel + 1 ) {
-    // calibrateMode = 0;
-  } */
   if (leftPlayer.isInitialized() && rightPlayer.isInitialized()) {
     calibrateMode = 0;
-    //Serial.println("BUTTS");
   }
 }
 
