@@ -9,7 +9,7 @@
 
 CRGB leds[NUM_LEDS];
 
-float targetPixel;
+double targetPixel;
 long lastDrawMillis;
 int frameCount;
 int points=0;
@@ -18,14 +18,17 @@ enum gameStates { prep, start, play, win };
 gameStates gameState = start;
 bool calibrateMode = 1;
 
-float velocity;
-static float thrustMax = 4;
+double velocity;
+static double thrustMax = 4;
 
 uint16_t framesAtTarget;
 int goalPixel;
 
 Player leftPlayer(NUM_LEDS/2 - 1);
 Player rightPlayer(NUM_LEDS/2 + 1);
+
+int leftSensorRead;
+int rightSensorRead;
 
 void setup() {
   Serial.begin(9600);
@@ -70,14 +73,13 @@ void loop() {
   }
 }
 
-
 void preGame( void ) {
-  static int minRead = 200;
-  static int maxRead = 350;
+  int minRead = 200;
+  int maxRead = 350;
   
   // read sensor input
-  int leftSensorRead = analogRead(LEFT_PLAYER_PIN);
-  int rightSensorRead = analogRead(RIGHT_PLAYER_PIN);
+  leftSensorRead = analogRead(LEFT_PLAYER_PIN);
+  rightSensorRead = analogRead(RIGHT_PLAYER_PIN);
 
   // If either the left or right player has not had their minFlex configured
   if (leftPlayer.minFlex < 0 || rightPlayer.minFlex < 0) {
@@ -101,13 +103,17 @@ void preGame( void ) {
       }
     }
   } else { // else we should configure maxFlex
+
     if (leftSensorRead > maxRead && leftPlayer.maxFlex < 0) {
       leds[leftPlayer.dotPosition] = CRGB(0,0,0);
       leftPlayer.dotPosition++;
       leds[leftPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
-      
+      if( leftPlayer.dotPosition > ( NUM_LEDS / 2 - 10 )) {
+        leftPlayer.maxSamples += leftSensorRead;
+        leftPlayer.maxSampleCount++;
+      }
       if (leftPlayer.dotPosition == NUM_LEDS / 2) {
-        leftPlayer.maxFlex = leftSensorRead;
+        leftPlayer.maxFlex = leftPlayer.maxSamples / leftPlayer.maxSampleCount;
       }
     }
     
@@ -115,11 +121,14 @@ void preGame( void ) {
       leds[rightPlayer.dotPosition] = CRGB(0,0,0);
       rightPlayer.dotPosition--;
       leds[rightPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
-      
-      if (rightPlayer.dotPosition == NUM_LEDS / 2) {
-        rightPlayer.maxFlex = rightSensorRead;
+      if( rightPlayer.dotPosition < ( NUM_LEDS / 2 + 10 )) {
+        rightPlayer.maxSamples += rightSensorRead;
+        rightPlayer.maxSampleCount++;
       }
-    }
+      if (rightPlayer.dotPosition == NUM_LEDS / 2) {
+        rightPlayer.maxFlex = rightPlayer.maxSamples / rightPlayer.maxSampleCount;
+      }
+     }
   }
 
   FastLED.show();
@@ -130,20 +139,15 @@ void preGame( void ) {
 }
 
 void gameStart(void) {
-  points = 0;
   targetPixel = NUM_LEDS/2;
+  Serial.println("game reset");
   velocity = 0;
   goalPixel = random(6,NUM_LEDS-6);
   gameState = play;
   calibrateMode = 1;
   leftPlayer.reset(NUM_LEDS/2 - 1);
   rightPlayer.reset(NUM_LEDS/2 + 1);
-  
-  // Draw the center point
-  leds[(int)targetPixel] = CHSV(HUE_BLUE, 255, 255);
-  FastLED.show();
-
-  Serial.println("game reset");
+  ledUpdate();
 }
 
 void pointScored( void ) {
