@@ -16,7 +16,7 @@ void gameUpdate( void ) {
   }
 
   // test for successful 'catch'
-  if( (int)targetPixel >= goalPixel-1 && (int)targetPixel <= goalPixel+1 ) {
+  if( (int)targetPixel >= goal.position-1 && (int)targetPixel <= goal.position+1 ) {
     framesAtTarget++;
     if( framesAtTarget > TARGET_FRAMES + (points * 2) ) {
       gameState = win;
@@ -25,6 +25,25 @@ void gameUpdate( void ) {
   }
   else {
     framesAtTarget = 0;
+  }
+
+  if (goal.isDead) {
+    points = 0;
+    
+    for (int j = 0; j < 5; j++) {
+      for (int i = 0; i < NUM_LEDS; i++) {
+        leds[i] = CHSV(HUE_RED, 255, 100);
+      }
+      FastLED.show();
+      delay(300);
+      for (int i = 0; i < NUM_LEDS; i++) {
+        leds[i] = CRGB(0,0,0);
+      }
+      FastLED.show(0);
+      delay(300);
+    }
+
+    gameState = start;
   }
 
   ledUpdate();

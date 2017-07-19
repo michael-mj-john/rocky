@@ -1,5 +1,6 @@
 #include "FastLED.h"
 #include "player.h"
+#include "goal.h"
 
 #define NUM_LEDS 144
 #define DATA_PIN 7
@@ -22,7 +23,8 @@ double velocity;
 static double thrustMax = 4;
 
 uint16_t framesAtTarget;
-int goalPixel;
+//int goalPixel;
+Goal goal(random(6,NUM_LEDS-6));
 
 Player leftPlayer(NUM_LEDS/2 - 1);
 Player rightPlayer(NUM_LEDS/2 + 1);
@@ -139,15 +141,21 @@ void preGame( void ) {
 }
 
 void gameStart(void) {
-  targetPixel = NUM_LEDS/2;
-  Serial.println("game reset");
   velocity = 0;
-  goalPixel = random(6,NUM_LEDS-6);
   gameState = play;
   calibrateMode = 1;
   leftPlayer.reset(NUM_LEDS/2 - 1);
   rightPlayer.reset(NUM_LEDS/2 + 1);
-  ledUpdate();
+
+  // Configure goal
+  goal.position = random(6,NUM_LEDS-6);
+
+  // Draw target
+  targetPixel = NUM_LEDS/2;
+  leds[(int)targetPixel] = CHSV(HUE_BLUE, 255, 255);
+  FastLED.show();
+
+  Serial.println("game reset");
 }
 
 void pointScored( void ) {
