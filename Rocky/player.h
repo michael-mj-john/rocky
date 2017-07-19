@@ -11,6 +11,8 @@ class Player {
     int maxFlex = -1; //put back to -1 when maxvalue is established dynamically
     float normalizedForce = 0;
     int dotPosition;
+    int maxSamples;
+    int maxSampleCount;
     
     // constructor
     Player( int dotPos ) : dotPosition( dotPos ) { }
