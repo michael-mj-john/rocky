@@ -24,7 +24,7 @@ static double thrustMax = 4;
 
 uint16_t framesAtTarget;
 //int goalPixel;
-Goal goal(random(6,NUM_LEDS-6));
+Goal goal(random(6,NUM_LEDS-6), 200);
 
 Player leftPlayer(NUM_LEDS/2 - 1);
 Player rightPlayer(NUM_LEDS/2 + 1);
@@ -147,8 +147,8 @@ void gameStart(void) {
   leftPlayer.reset(NUM_LEDS/2 - 1);
   rightPlayer.reset(NUM_LEDS/2 + 1);
 
-  // Configure goal
-  goal.position = random(6,NUM_LEDS-6);
+  // Configure goal (but don't show it yet!)
+  goal.reset(random(6,NUM_LEDS-6), 200);
 
   // Draw target
   targetPixel = NUM_LEDS/2;

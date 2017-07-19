@@ -4,14 +4,13 @@
 /* public */
 // To be called once per frame
 void Goal::update() {
-  if (framesRemaining == 0) {
+  if (lifeRemaining == 0) {
     isDead = true;
-    
     return;
   }
 
   // If time is running out (more than half of the frames have been spent, OR less than 2 second remaining), start flashing!
-  if (framesRemaining / (float)initialFrames < 0.5 || framesRemaining < 60) {
+  if (lifeRemaining / (float)initialLife < 0.5 || lifeRemaining < 60) {
     flashFrames++;
 
     if (flashFrames > 3) {
@@ -20,7 +19,13 @@ void Goal::update() {
     }
   }
   
-  framesRemaining--;
+  lifeRemaining--;
+}
+
+void Goal::reset(int newPos, int newLifetime) {
+  position = newPos;
+
+  lifeRemaining = initialLife = newLifetime;
 }
 
 uint8_t Goal::getColor() {
