@@ -46,7 +46,7 @@ void gameUpdate( void ) {
   goal.update();
 
   // GAME OVER
-  if (goal.isDead) {
+  if (goal.isDead()) {
     showPoints(HUE_RED);
 
     // Reset game

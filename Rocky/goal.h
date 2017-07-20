@@ -11,7 +11,6 @@ class Goal {
   int initialLife, lifeRemaining; // How long will this goal exist, measured in frames
   int flashFrames = 0;
   bool visible = true;
-  bool isDead = false;
   uint8_t onColor = 80;
   uint8_t offColor = 0;
 
@@ -20,6 +19,7 @@ class Goal {
 
   void update();
   void reset(int newPos, int newLifetime);
+  bool isDead();
   
   uint8_t getColor();
 };

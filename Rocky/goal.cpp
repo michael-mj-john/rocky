@@ -5,7 +5,6 @@
 // To be called once per frame
 void Goal::update() {
   if (lifeRemaining == 0) {
-    isDead = true;
     return;
   }
 
@@ -35,6 +34,10 @@ void Goal::reset(int newPos, int newLifetime) {
 
   lifeRemaining = initialLife = newLifetime;
   visible = true;
+}
+
+bool Goal::isDead() {
+  return lifeRemaining <= 0;
 }
 
 uint8_t Goal::getColor() {
