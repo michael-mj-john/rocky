@@ -35,8 +35,8 @@ int rightSensorRead;
 
 void setup() {
   Serial.begin(9600);
-  pinMode(3,INPUT); // left button 
-  pinMode(4, INPUT); // right button
+  pinMode(LEFT_PLAYER_PIN,INPUT);
+  pinMode(RIGHT_PLAYER_PIN, INPUT);
   FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
   randomSeed(analogRead(A0));
   frameCount = 0;
@@ -88,30 +88,39 @@ void preGame( void ) {
   // read sensor input
   leftSensorRead = analogRead(LEFT_PLAYER_PIN);
   rightSensorRead = analogRead(RIGHT_PLAYER_PIN);
+  Serial.print(leftSensorRead);
+  Serial.print(" ");
+  Serial.println(rightSensorRead);
 
   // If either the left or right player has not had their minFlex configured
-  if (leftPlayer.minFlex < 0 || rightPlayer.minFlex < 0) {
-    if (leftPlayer.minFlex < 0) {
+  if (!leftPlayer.minConfigured || !rightPlayer.minConfigured) {
+    if (!leftPlayer.minConfigured) {
       leds[leftPlayer.dotPosition] = CRGB(0,0,0);
       leftPlayer.dotPosition--;
       leds[leftPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
       
       if (leftPlayer.dotPosition == 0) {
         leftPlayer.minFlex = leftSensorRead;
+        leftPlayer.minConfigured = true;
       }
     }
     
-    if (rightPlayer.minFlex < 0) {
+    if (!rightPlayer.minConfigured) {
       leds[rightPlayer.dotPosition] = CRGB(0,0,0);
       rightPlayer.dotPosition++;
       leds[rightPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
       
       if (rightPlayer.dotPosition == NUM_LEDS - 1) {
         rightPlayer.minFlex = rightSensorRead;
+        rightPlayer.minConfigured = true;
       }
     }
   } else { // else we should configure maxFlex
-    if (leftSensorRead > maxRead && leftPlayer.maxFlex < 0) {
+    //Serial.print(leftPlayer.maxFlex);
+    //Serial.print(" ");
+    //Serial.println(rightPlayer.maxFlex);
+    
+    if (leftSensorRead > maxRead && !leftPlayer.maxConfigured) {
       leds[leftPlayer.dotPosition] = CRGB(0,0,0);
       leftPlayer.dotPosition++;
       leds[leftPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
@@ -123,10 +132,11 @@ void preGame( void ) {
       
       if (leftPlayer.dotPosition >= NUM_LEDS / 2) {
         leftPlayer.maxFlex = leftPlayer.maxSamples / leftPlayer.maxSampleCount;
+        leftPlayer.maxConfigured = true;
       }
     }
     
-    if (rightSensorRead > maxRead && rightPlayer.maxFlex < 0) {
+    if (rightSensorRead > maxRead && !rightPlayer.maxConfigured) {
       leds[rightPlayer.dotPosition] = CRGB(0,0,0);
       rightPlayer.dotPosition--;
       leds[rightPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
@@ -138,6 +148,7 @@ void preGame( void ) {
       
       if (rightPlayer.dotPosition <= NUM_LEDS / 2) {
         rightPlayer.maxFlex = rightPlayer.maxSamples / rightPlayer.maxSampleCount;
+        rightPlayer.maxConfigured = true;
       }
      }
   }

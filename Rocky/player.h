@@ -7,8 +7,12 @@ class Player {
   private:
   public:
     // The values of this players minimum and maximum flexes
-    int minFlex = -1;
-    int maxFlex = -1; //put back to -1 when maxvalue is established dynamically
+    int minFlex = 0;
+    int maxFlex = 0; //put back to -1 when maxvalue is established dynamically
+
+    bool minConfigured = false;
+    bool maxConfigured = false;
+    
     float normalizedForce = 0;
     int dotPosition;
     int maxSamples;
