@@ -29,10 +29,17 @@ void Goal::update() {
   lifeRemaining--;
 }
 
-void Goal::reset(int newPos, int newLifetime) {
-  pos = newPos;
+// Resets position and lifetime based on the value of points and GOAL_TIME
+void Goal::reset(int numLEDS, int points, int goalTime) {
+  int maxSpawnDistance = min(numLEDS/2-1, 10 + (points*5));
 
-  lifeRemaining = initialLife = newLifetime;
+  if (rand() % 2 == 0) {
+    pos = numLEDS/2 + 5 + random(0, 100)/100.0 * maxSpawnDistance;
+  } else {
+    pos = numLEDS/2 - 5 - random(0, 100)/100.0 * maxSpawnDistance;
+  }
+
+  lifeRemaining = initialLife = goalTime;
   visible = true;
 }
 

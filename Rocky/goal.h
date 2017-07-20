@@ -18,7 +18,7 @@ class Goal {
   Goal(int newPos, int lifetime) : pos(newPos), initialLife(lifetime), lifeRemaining(lifetime) { }
 
   void update();
-  void reset(int newPos, int newLifetime);
+  void reset(int numLEDS, int points, int goalTime); // Resets position and lifetime based on the value of points and GOAL_TIME
   bool isDead();
   
   uint8_t getColor();

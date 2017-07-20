@@ -25,7 +25,7 @@ static double thrustMax = 4;
 
 uint16_t framesAtTarget;
 //int goalPixel;
-Goal goal(random(6,NUM_LEDS-6), GOAL_TIME);
+Goal goal(0, GOAL_TIME);
 
 Player leftPlayer(NUM_LEDS/2 - 1);
 Player rightPlayer(NUM_LEDS/2 + 1);
@@ -46,6 +46,7 @@ void loop() {
   // if reset button is pressed
   if (digitalRead(2) == HIGH) {
     gameState = start;
+    fill_solid( leds, NUM_LEDS, CRGB::Black);
   }
   
   switch (gameState) {
@@ -164,7 +165,7 @@ void gameStart(void) {
   rightPlayer.reset(NUM_LEDS/2 + 1);
 
   // Configure goal (but don't show it yet!)
-  goal.reset(random(6,NUM_LEDS-6), GOAL_TIME);
+  goal.reset(NUM_LEDS, points, GOAL_TIME);
 
   // Draw target
   targetPixel = NUM_LEDS/2;
