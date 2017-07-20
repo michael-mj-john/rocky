@@ -1,19 +1,16 @@
 // Flashes the number of points the player has in the middle of the LEDs.
 // Not async, will block.
 void showPoints(char hue) {
-  clearDisplay();
+   fill_solid( leds, NUM_LEDS, CRGB::Black);
   
   int startPos = (NUM_LEDS / 2) - points;
   
   for (int j = 0; j < 5; j++) {
     // Draw points separated by 1 pixel each
-    for (int i = startPos; i < points * 2; i++) {
-      (i % 2 == 0) ? leds[i] = CHSV(HUE_RED, 255, 100) : leds[i] = CRGB(0,0,0);
+    for (int i = startPos; i < startPos + (points * 2); i+=2) {
+      leds[i] = CHSV(HUE_RED, 255, 100);
     }
     FastLED.show();
-    delay(300);
-
-    clearDisplay();
     delay(300);
   }
 }
@@ -36,7 +33,7 @@ void gameUpdate( void ) {
   }
 
   // test for successful 'catch'
-  if( (int)targetPixel >= goal.position-1 && (int)targetPixel <= goal.position+1 ) {
+  if( (int)targetPixel >= goal.pos-1 && (int)targetPixel <= goal.pos+1 ) {
     framesAtTarget++;
     if( framesAtTarget > TARGET_FRAMES + (points * 2) ) {
       gameState = win;

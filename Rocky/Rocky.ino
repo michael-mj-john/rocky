@@ -7,7 +7,7 @@
 #define LEFT_PLAYER_PIN A0
 #define RIGHT_PLAYER_PIN A1
 #define TARGET_FRAMES 5
-#define GOAL_TIME 400
+#define GOAL_TIME 200
 
 CRGB leds[NUM_LEDS];
 
@@ -182,6 +182,6 @@ void clearDisplay() {
   for (int i = 0; i < NUM_LEDS; i++) {
     leds[i] = CRGB(0,0,0);
   }
-  FastLED.show(0);
+  FastLED.show();
 }
 

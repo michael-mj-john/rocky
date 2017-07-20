@@ -21,7 +21,7 @@ void ledUpdate() {
 
   //draw the "mouse" pixel
   uint8_t goalColor = goal.getColor();
-  leds[goal.position] = CRGB(goalColor, goalColor, goalColor);
+  leds[goal.pos] = CRGB(goalColor, goalColor, goalColor);
   
   FastLED.show();
 }

@@ -6,7 +6,7 @@
 class Goal {
   private:
   public:
-  int position;
+  int pos;
   int framesOver = 0;
   int initialLife, lifeRemaining; // How long will this goal exist, measured in frames
   int flashFrames = 0;
@@ -16,7 +16,7 @@ class Goal {
   uint8_t offColor = 0;
 
   // constructor
-  Goal(int newPos, int lifetime) : position(newPos), initialLife(lifetime), lifeRemaining(lifetime) { }
+  Goal(int newPos, int lifetime) : pos(newPos), initialLife(lifetime), lifeRemaining(lifetime) { }
 
   void update();
   void reset(int newPos, int newLifetime);

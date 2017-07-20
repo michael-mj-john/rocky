@@ -31,7 +31,7 @@ void Goal::update() {
 }
 
 void Goal::reset(int newPos, int newLifetime) {
-  position = newPos;
+  pos = newPos;
 
   lifeRemaining = initialLife = newLifetime;
   visible = true;
