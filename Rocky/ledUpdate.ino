@@ -20,7 +20,6 @@ void ledUpdate() {
   }
 
   //draw the "mouse" pixel
-  goal.update();
   uint8_t goalColor = goal.getColor();
   leds[goal.position] = CRGB(goalColor, goalColor, goalColor);
   

@@ -6,7 +6,8 @@
 #define DATA_PIN 7
 #define LEFT_PLAYER_PIN A0
 #define RIGHT_PLAYER_PIN A1
-#define TARGET_FRAMES 10
+#define TARGET_FRAMES 5
+#define GOAL_TIME 400
 
 CRGB leds[NUM_LEDS];
 
@@ -24,7 +25,7 @@ static double thrustMax = 4;
 
 uint16_t framesAtTarget;
 //int goalPixel;
-Goal goal(random(6,NUM_LEDS-6), 200);
+Goal goal(random(6,NUM_LEDS-6), GOAL_TIME);
 
 Player leftPlayer(NUM_LEDS/2 - 1);
 Player rightPlayer(NUM_LEDS/2 + 1);
@@ -114,7 +115,7 @@ void preGame( void ) {
         leftPlayer.maxSamples += leftSensorRead;
         leftPlayer.maxSampleCount++;
       }
-      if (leftPlayer.dotPosition == NUM_LEDS / 2) {
+      if (leftPlayer.dotPosition >= NUM_LEDS / 2) {
         leftPlayer.maxFlex = leftPlayer.maxSamples / leftPlayer.maxSampleCount;
       }
     }
@@ -127,7 +128,7 @@ void preGame( void ) {
         rightPlayer.maxSamples += rightSensorRead;
         rightPlayer.maxSampleCount++;
       }
-      if (rightPlayer.dotPosition == NUM_LEDS / 2) {
+      if (rightPlayer.dotPosition <= NUM_LEDS / 2) {
         rightPlayer.maxFlex = rightPlayer.maxSamples / rightPlayer.maxSampleCount;
       }
      }
@@ -148,7 +149,7 @@ void gameStart(void) {
   rightPlayer.reset(NUM_LEDS/2 + 1);
 
   // Configure goal (but don't show it yet!)
-  goal.reset(random(6,NUM_LEDS-6), 200);
+  goal.reset(random(6,NUM_LEDS-6), GOAL_TIME);
 
   // Draw target
   targetPixel = NUM_LEDS/2;
@@ -167,14 +168,20 @@ void pointScored( void ) {
     }
     FastLED.show();
     delay(300);
-    for( int i =0; i<NUM_LEDS; i++ ) {
-      leds[i] = CRGB(0,0,0);
-    }
-    FastLED.show(0);
+    
+    clearDisplay();
     delay(300);
   }
   
   gameState = start;
   
+}
+
+// Turn off all LEDS
+void clearDisplay() {
+  for (int i = 0; i < NUM_LEDS; i++) {
+    leds[i] = CRGB(0,0,0);
+  }
+  FastLED.show(0);
 }
 

@@ -1,3 +1,23 @@
+// Flashes the number of points the player has in the middle of the LEDs.
+// Not async, will block.
+void showPoints(char hue) {
+  clearDisplay();
+  
+  int startPos = (NUM_LEDS / 2) - points;
+  
+  for (int j = 0; j < 5; j++) {
+    // Draw points separated by 1 pixel each
+    for (int i = startPos; i < points * 2; i++) {
+      (i % 2 == 0) ? leds[i] = CHSV(HUE_RED, 255, 100) : leds[i] = CRGB(0,0,0);
+    }
+    FastLED.show();
+    delay(300);
+
+    clearDisplay();
+    delay(300);
+  }
+}
+
 void gameUpdate( void ) {
   float leftValue = analogRead(LEFT_PLAYER_PIN);
   leftPlayer.setNormalizedForce(leftValue);
@@ -27,25 +47,17 @@ void gameUpdate( void ) {
     framesAtTarget = 0;
   }
 
-  if (goal.isDead) {
-    points = 0;
-    
-    for (int j = 0; j < 5; j++) {
-      for (int i = 0; i < NUM_LEDS; i++) {
-        leds[i] = CHSV(HUE_RED, 255, 100);
-      }
-      FastLED.show();
-      delay(300);
-      for (int i = 0; i < NUM_LEDS; i++) {
-        leds[i] = CRGB(0,0,0);
-      }
-      FastLED.show(0);
-      delay(300);
-    }
+  goal.update();
 
+  // GAME OVER
+  if (goal.isDead) {
+    showPoints(HUE_RED);
+
+    // Reset game
+    points = 0;
     gameState = start;
   }
-
+  
   ledUpdate();
 }
 
