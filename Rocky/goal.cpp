@@ -12,11 +12,19 @@ void Goal::update() {
   // If time is running out (more than half of the frames have been spent, OR less than 2 second remaining), start flashing!
   if (lifeRemaining / (float)initialLife < 0.5 || lifeRemaining < 60) {
     flashFrames++;
-
-    if (flashFrames > 3) {
-      flashFrames = 0;
-      visible = !visible;
+    if( lifeRemaining > 30 ) {
+      if (flashFrames > 3) {
+        flashFrames = 0;
+        visible = !visible;
+      }
     }
+    else {
+        if (flashFrames > 1) {
+        flashFrames = 0;
+        visible = !visible;
+      }
+    }
+
   }
   
   lifeRemaining--;
