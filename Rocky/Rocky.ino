@@ -59,8 +59,6 @@ void loop() {
       break;
       
     case play:
-      Serial.println(goal.isDead());
-    
       if (millis() > lastDrawMillis + 1000/30) { // 30 fps LED update
         frameCount < 30 ? frameCount++ : frameCount = 0;
         if( calibrateMode ) {
