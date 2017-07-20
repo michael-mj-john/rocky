@@ -21,6 +21,6 @@ bool Player::isInitialized() {
 void Player::setNormalizedForce(int sensorValue) {
   sensorValue = min( sensorValue, maxFlex );
   float range = maxFlex - minFlex;
-  normalizedForce = constrain( ((sensorValue - minFlex) / range),0,1);
+  normalizedForce = constrain((sensorValue - minFlex) / range, 0, 1);
 }
 

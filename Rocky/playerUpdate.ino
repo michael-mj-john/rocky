@@ -1,7 +1,7 @@
 // Flashes the number of points the player has in the middle of the LEDs.
 // Not async, will block.
 void showPoints(char hue) {
-   fill_solid( leds, NUM_LEDS, CRGB::Black);
+  fill_solid( leds, NUM_LEDS, CRGB::Black);
   
   int startPos = (NUM_LEDS / 2) - points;
   
@@ -28,8 +28,7 @@ void gameUpdate( void ) {
 
   // test for going off either end, and reset if so
   if( (int)targetPixel >= NUM_LEDS-2 || targetPixel <= 0 ) { 
-   velocity = 0;
-   gameState = start;
+    gameState = start;
   }
 
   // test for successful 'catch'

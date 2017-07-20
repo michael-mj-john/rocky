@@ -77,6 +77,11 @@ void loop() {
 }
 
 void preGame( void ) {
+  if (leftPlayer.isInitialized() && rightPlayer.isInitialized()) {
+    calibrateMode = 0;
+    return;
+  }
+  
   int minRead = 200;
   int maxRead = 350;
   
@@ -86,7 +91,7 @@ void preGame( void ) {
 
   // If either the left or right player has not had their minFlex configured
   if (leftPlayer.minFlex < 0 || rightPlayer.minFlex < 0) {
-    if (/*leftSensorRead < minRead && */leftPlayer.minFlex < 0) {
+    if (leftPlayer.minFlex < 0) {
       leds[leftPlayer.dotPosition] = CRGB(0,0,0);
       leftPlayer.dotPosition--;
       leds[leftPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
@@ -96,7 +101,7 @@ void preGame( void ) {
       }
     }
     
-    if (/*rightSensorRead < minRead && */rightPlayer.minFlex < 0) {
+    if (rightPlayer.minFlex < 0) {
       leds[rightPlayer.dotPosition] = CRGB(0,0,0);
       rightPlayer.dotPosition++;
       leds[rightPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
@@ -106,15 +111,16 @@ void preGame( void ) {
       }
     }
   } else { // else we should configure maxFlex
-
     if (leftSensorRead > maxRead && leftPlayer.maxFlex < 0) {
       leds[leftPlayer.dotPosition] = CRGB(0,0,0);
       leftPlayer.dotPosition++;
       leds[leftPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
+      
       if( leftPlayer.dotPosition > ( NUM_LEDS / 2 - 10 )) {
         leftPlayer.maxSamples += leftSensorRead;
         leftPlayer.maxSampleCount++;
       }
+      
       if (leftPlayer.dotPosition >= NUM_LEDS / 2) {
         leftPlayer.maxFlex = leftPlayer.maxSamples / leftPlayer.maxSampleCount;
       }
@@ -124,10 +130,12 @@ void preGame( void ) {
       leds[rightPlayer.dotPosition] = CRGB(0,0,0);
       rightPlayer.dotPosition--;
       leds[rightPlayer.dotPosition] = CHSV(HUE_BLUE, 255, 100);
+      
       if( rightPlayer.dotPosition < ( NUM_LEDS / 2 + 10 )) {
         rightPlayer.maxSamples += rightSensorRead;
         rightPlayer.maxSampleCount++;
       }
+      
       if (rightPlayer.dotPosition <= NUM_LEDS / 2) {
         rightPlayer.maxFlex = rightPlayer.maxSamples / rightPlayer.maxSampleCount;
       }
@@ -135,10 +143,6 @@ void preGame( void ) {
   }
 
   FastLED.show();
-      
-  if (leftPlayer.isInitialized() && rightPlayer.isInitialized()) {
-    calibrateMode = 0;
-  }
 }
 
 void gameStart(void) {
