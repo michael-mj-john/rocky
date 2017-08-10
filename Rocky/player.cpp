@@ -22,9 +22,9 @@ bool Player::isInitialized() {
 // Given a raw sensor reading (sensorValue), what is the actual "force" that this player is generating?
 // Normalized to [0 .. 1]
 void Player::setNormalizedForce(int sensorValue) {
-  sensorValue = constrain(sensorValue, (float)minFlex, (float)maxFlex);
-  //float realMin = max(0, minFlex);
+  float sensorFloat = (float)sensorValue;
+  sensorFloat = constrain(sensorFloat, (float)minFlex, (float)maxFlex);
   float range = maxFlex - minFlex;
-  normalizedForce = constrain((sensorValue - minFlex) / range, 0.0, 1.0);
+  normalizedForce = constrain((sensorFloat - minFlex) / range, 0.0, 1.0);
 }
 
