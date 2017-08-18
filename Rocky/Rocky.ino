@@ -44,12 +44,15 @@ void setup() {
 
 void loop() {
   // if reset button is pressed
-  if (digitalRead(2) == HIGH) {
+  /*if (digitalRead(2) == HIGH) {
     gameState = start;
     fill_solid( leds, NUM_LEDS, CRGB::Black);
-  }
+  }*/
   
   switch (gameState) {
+    case prep:
+      preGame();
+      break;
 
     case start:
       gameStart();
